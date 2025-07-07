@@ -3,7 +3,8 @@ export interface Service {
   title: string;
   description: string;
   icon: string;
-  category: 'landscape' | 'building';
+  category: 'landscape' | 'building' | 'perizinan' | 'pengujian' | 'studi' | 'penyelidikan-tanah';
+  subcategory?: string;
   details: string[];
 }
 
@@ -21,127 +22,195 @@ export interface PortfolioItem {
   title: string;
   description: string;
   image: string;
-  category: 'landscape' | 'building';
+  category: 'landscape' | 'building' | 'perizinan' | 'pengujian' | 'studi' | 'penyelidikan-tanah';
+  subcategory?: string;
   year: string;
   client: string;
+  location?: string;
+  featured?: boolean;
 }
 
 export const services: Service[] = [
+  // Perencanaan dan Desain
   {
-    id: 'landscape-design',
-    title: 'Desain Lanskap',
-    description: 'Jasa desain yang membantu menciptakan rencana lanskap yang sesuai dengan kebutuhan dan preferensi klien.',
-    icon: 'Palette',
-    category: 'landscape',
-    details: [
-      'Konsep desain lanskap',
-      'Perencanaan tata ruang',
-      'Pemilihan tanaman',
-      'Desain hardscape'
-    ]
-  },
-  {
-    id: 'garden-development',
-    title: 'Pengembangan Taman',
-    description: 'Layanan yang membantu menciptakan taman yang indah dan fungsional, termasuk pemilihan tanaman, desain jalur, dan instalasi sistem irigasi.',
-    icon: 'Trees',
-    category: 'landscape',
-    details: [
-      'Desain taman',
-      'Instalasi sistem irigasi',
-      'Pemilihan tanaman hias',
-      'Maintenance taman'
-    ]
-  },
-  {
-    id: 'green-space',
-    title: 'Pengembangan Ruang Terbuka Hijau',
-    description: 'Layanan yang membantu menciptakan ruang terbuka hijau yang dapat digunakan untuk rekreasi, olahraga, atau kegiatan lainnya.',
-    icon: 'TreePine',
-    category: 'landscape',
-    details: [
-      'Perencanaan RTH',
-      'Desain area rekreasi',
-      'Fasilitas olahraga',
-      'Konservasi lingkungan'
-    ]
-  },
-  {
-    id: 'environmental-consulting',
-    title: 'Konsultasi Lingkungan',
-    description: 'Jasa yang membantu mengidentifikasi dan mengatasi masalah lingkungan yang terkait dengan pengembangan lanskap.',
-    icon: 'Leaf',
-    category: 'landscape',
-    details: [
-      'Analisis dampak lingkungan',
-      'Mitigasi risiko',
-      'Sustainable design',
-      'Environmental assessment'
-    ]
-  },
-  {
-    id: 'architectural-design',
+    id: 'desain-arsitektur',
     title: 'Desain Arsitektur',
     description: 'Layanan desain arsitektur untuk berbagai jenis bangunan dengan pendekatan yang inovatif dan berkelanjutan.',
     icon: 'Building',
     category: 'building',
+    subcategory: 'Perencanaan dan Desain',
     details: [
-      'Desain arsitektur',
-      'Desain struktur',
-      'Desain MEP',
-      'Perencanaan detail'
+      'Desain konseptual',
+      'Desain detail',
+      'Gambar kerja',
+      'Spesifikasi teknis'
     ]
   },
   {
-    id: 'permits',
-    title: 'Perizinan',
-    description: 'Jasa pengurusan berbagai macam perizinan bangunan dan lingkungan.',
+    id: 'desain-struktur',
+    title: 'Desain Struktur',
+    description: 'Perencanaan struktur bangunan yang aman dan efisien dengan standar internasional.',
+    icon: 'Building2',
+    category: 'building',
+    subcategory: 'Perencanaan dan Desain',
+    details: [
+      'Analisis struktur',
+      'Desain pondasi',
+      'Perhitungan beban',
+      'Gambar struktur'
+    ]
+  },
+  {
+    id: 'desain-mekanikal-plumbing',
+    title: 'Desain Mekanikal dan Plumbing',
+    description: 'Sistem MEP (Mechanical, Electrical, Plumbing) yang terintegrasi dan efisien.',
+    icon: 'Settings',
+    category: 'building',
+    subcategory: 'Perencanaan dan Desain',
+    details: [
+      'Sistem HVAC',
+      'Sistem plumbing',
+      'Sistem fire protection',
+      'Sistem elektrikal'
+    ]
+  },
+
+  // Perizinan
+  {
+    id: 'izin-lingkungan',
+    title: 'Izin Lingkungan',
+    description: 'Pengurusan izin lingkungan termasuk RKL-RPL, AMDAL, dan UKL-UPL.',
     icon: 'FileCheck',
-    category: 'building',
+    category: 'perizinan',
+    subcategory: 'Izin Lingkungan',
     details: [
-      'Izin lingkungan (RKL-RPL, AMDAL, UKL-UPL)',
-      'Andalalin',
-      'PBG (Persetujuan Bangunan Gedung)',
-      'SLF (Sertifikat Laik Fungsi)'
+      'RKL-RPL (Rencana Kelola Lingkungan)',
+      'AMDAL (Analisis Mengenai Dampak Lingkungan)',
+      'UKL-UPL (Upaya Kelola Lingkungan)',
+      'Izin pembuangan limbah'
     ]
   },
   {
-    id: 'testing',
-    title: 'Pengujian',
-    description: 'Layanan pengujian dan inspeksi untuk memastikan kualitas dan keamanan bangunan.',
-    icon: 'Search',
-    category: 'building',
+    id: 'andalalin',
+    title: 'Andalalin',
+    description: 'Analisis dampak lalu lintas untuk proyek pembangunan.',
+    icon: 'Car',
+    category: 'perizinan',
     details: [
-      'Uji lingkungan',
-      'Uji Riksa K3',
-      'Quality control',
-      'Safety inspection'
+      'Studi kelayakan lalu lintas',
+      'Analisis dampak',
+      'Rekomendasi mitigasi',
+      'Dokumen andalalin'
     ]
   },
   {
-    id: 'studies',
-    title: 'Studi Kelayakan',
-    description: 'Layanan studi dan analisis untuk mendukung pengambilan keputusan proyek.',
+    id: 'pbg',
+    title: 'PBG (Persetujuan Bangunan Gedung)',
+    description: 'Pengurusan persetujuan bangunan gedung sesuai regulasi.',
     icon: 'FileText',
-    category: 'building',
+    category: 'perizinan',
     details: [
-      'Studi kelayakan',
-      'Studi dampak lingkungan',
-      'Feasibility analysis',
-      'Risk assessment'
+      'Dokumen teknis',
+      'Perhitungan struktur',
+      'Gambar arsitektur',
+      'Spesifikasi bangunan'
     ]
   },
   {
-    id: 'soil-investigation',
-    title: 'Penyelidikan Tanah',
-    description: 'Layanan penyelidikan tanah untuk mendukung perencanaan pondasi dan struktur bangunan.',
+    id: 'slf',
+    title: 'SLF (Sertifikat Laik Fungsi)',
+    description: 'Sertifikasi kelayakan fungsi bangunan gedung.',
+    icon: 'Award',
+    category: 'perizinan',
+    details: [
+      'Inspeksi bangunan',
+      'Pengujian sistem',
+      'Evaluasi keselamatan',
+      'Sertifikat laik fungsi'
+    ]
+  },
+
+  // Pengujian
+  {
+    id: 'uji-lingkungan',
+    title: 'Uji Lingkungan',
+    description: 'Pengujian kualitas lingkungan dan dampak proyek.',
+    icon: 'Search',
+    category: 'pengujian',
+    details: [
+      'Uji kualitas air',
+      'Uji kualitas udara',
+      'Uji kebisingan',
+      'Uji tanah'
+    ]
+  },
+  {
+    id: 'uji-riksa-k3',
+    title: 'Uji Riksa K3',
+    description: 'Pengujian keselamatan dan kesehatan kerja.',
+    icon: 'Shield',
+    category: 'pengujian',
+    details: [
+      'Audit K3',
+      'Inspeksi keselamatan',
+      'Evaluasi risiko',
+      'Sertifikasi K3'
+    ]
+  },
+
+  // Studi
+  {
+    id: 'studi-kelayakan',
+    title: 'Studi Kelayakan',
+    description: 'Analisis kelayakan teknis dan ekonomis proyek.',
+    icon: 'BarChart',
+    category: 'studi',
+    details: [
+      'Analisis teknis',
+      'Analisis ekonomi',
+      'Analisis risiko',
+      'Rekomendasi'
+    ]
+  },
+  {
+    id: 'studi-dampak-lingkungan',
+    title: 'Studi Dampak Lingkungan',
+    description: 'Evaluasi dampak lingkungan dari proyek pembangunan.',
+    icon: 'Leaf',
+    category: 'studi',
+    details: [
+      'Baseline study',
+      'Impact assessment',
+      'Mitigation measures',
+      'Monitoring plan'
+    ]
+  },
+
+  // Penyelidikan Tanah
+  {
+    id: 'sondir',
+    title: 'Sondir',
+    description: 'Penyelidikan tanah dengan metode sondir untuk analisis daya dukung.',
     icon: 'Layers',
-    category: 'building',
+    category: 'penyelidikan-tanah',
     details: [
       'Sondir test',
+      'Analisis daya dukung',
+      'Profil tanah',
+      'Rekomendasi pondasi'
+    ]
+  },
+  {
+    id: 'boring',
+    title: 'Boring',
+    description: 'Pengeboran tanah untuk sampling dan analisis laboratorium.',
+    icon: 'Drill',
+    category: 'penyelidikan-tanah',
+    details: [
       'Boring test',
-      'Soil analysis',
-      'Foundation recommendation'
+      'Sampling tanah',
+      'Uji laboratorium',
+      'Laporan geoteknik'
     ]
   }
 ];
@@ -189,7 +258,9 @@ export const portfolioItems: PortfolioItem[] = [
     image: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800',
     category: 'landscape',
     year: '2023',
-    client: 'PT. Graha Indah'
+    client: 'PT. Graha Indah',
+    location: 'Jakarta Selatan',
+    featured: true
   },
   {
     id: 'corporate-office',
@@ -197,44 +268,53 @@ export const portfolioItems: PortfolioItem[] = [
     description: 'Desain dan pembangunan gedung perkantoran modern dengan sertifikasi green building.',
     image: 'https://images.pexels.com/photos/2736834/pexels-photo-2736834.jpeg?auto=compress&cs=tinysrgb&w=800',
     category: 'building',
+    subcategory: 'Perencanaan dan Desain',
     year: '2023',
-    client: 'PT. Teknologi Maju'
+    client: 'PT. Teknologi Maju',
+    location: 'Jakarta Pusat',
+    featured: true
   },
   {
-    id: 'city-park',
-    title: 'Central City Park',
-    description: 'Revitalisasi taman kota dengan konsep ramah lingkungan dan fasilitas rekreasi keluarga.',
+    id: 'environmental-permit',
+    title: 'AMDAL Industrial Complex',
+    description: 'Penyusunan dokumen AMDAL untuk kompleks industri dengan analisis dampak lingkungan komprehensif.',
     image: 'https://images.pexels.com/photos/1134166/pexels-photo-1134166.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'landscape',
+    category: 'perizinan',
+    subcategory: 'Izin Lingkungan',
     year: '2022',
-    client: 'Pemda Kota Jakarta'
+    client: 'PT. Industri Nusantara',
+    location: 'Bekasi',
+    featured: true
   },
   {
-    id: 'shopping-mall',
-    title: 'Modern Shopping Mall',
-    description: 'Perencanaan dan desain mall modern dengan integrasi ruang terbuka hijau.',
+    id: 'soil-investigation',
+    title: 'Soil Investigation Mall Project',
+    description: 'Penyelidikan tanah komprehensif untuk proyek pembangunan mall dengan metode boring dan sondir.',
     image: 'https://images.pexels.com/photos/1036936/pexels-photo-1036936.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'building',
+    category: 'penyelidikan-tanah',
     year: '2022',
-    client: 'PT. Retail Nusantara'
+    client: 'PT. Retail Nusantara',
+    location: 'Tangerang'
   },
   {
-    id: 'resort-landscape',
-    title: 'Tropical Resort Landscape',
-    description: 'Desain lanskap resort dengan konsep tropical paradise yang memadukan alam dan kenyamanan.',
+    id: 'feasibility-study',
+    title: 'Resort Development Feasibility',
+    description: 'Studi kelayakan pengembangan resort dengan analisis teknis, ekonomi, dan lingkungan.',
     image: 'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'landscape',
+    category: 'studi',
     year: '2021',
-    client: 'Paradise Resort & Spa'
+    client: 'Paradise Resort & Spa',
+    location: 'Bali'
   },
   {
-    id: 'hospital-complex',
-    title: 'Hospital Complex',
-    description: 'Desain kompleks rumah sakit dengan standar internasional dan healing garden.',
+    id: 'hospital-testing',
+    title: 'Hospital Safety Testing',
+    description: 'Pengujian keselamatan dan sertifikasi SLF untuk kompleks rumah sakit.',
     image: 'https://images.pexels.com/photos/668300/pexels-photo-668300.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'building',
+    category: 'pengujian',
     year: '2021',
-    client: 'RS. Sehat Sentosa'
+    client: 'RS. Sehat Sentosa',
+    location: 'Jakarta Timur'
   }
 ];
 
@@ -247,6 +327,7 @@ export const companyInfo = {
   email: 'info@reswarapraptama.com',
   address: 'Jl. Sudirman No. 123, Jakarta Pusat 10110',
   website: 'www.reswarapraptama.com',
+  whatsapp: '+62 812 3456 7890',
   socialMedia: {
     linkedin: 'https://linkedin.com/company/reswara-praptama',
     instagram: 'https://instagram.com/reswarapraptama',
