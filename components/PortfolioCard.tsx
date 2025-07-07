@@ -20,10 +20,38 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ item }) => {
     building: {
       badge: 'bg-blue-100 text-blue-700 border-blue-200',
       accent: 'from-blue-500 to-blue-600'
+    },
+    perizinan: {
+      badge: 'bg-purple-100 text-purple-700 border-purple-200',
+      accent: 'from-purple-500 to-purple-600'
+    },
+    pengujian: {
+      badge: 'bg-orange-100 text-orange-700 border-orange-200',
+      accent: 'from-orange-500 to-orange-600'
+    },
+    studi: {
+      badge: 'bg-indigo-100 text-indigo-700 border-indigo-200',
+      accent: 'from-indigo-500 to-indigo-600'
+    },
+    'penyelidikan-tanah': {
+      badge: 'bg-amber-100 text-amber-700 border-amber-200',
+      accent: 'from-amber-500 to-amber-600'
     }
   };
 
-  const colors = categoryColors[item.category];
+  const colors = categoryColors[item.category] || categoryColors.building; // Fallback to building colors
+
+  const getCategoryDisplay = (category: string) => {
+    const categoryMap = {
+      landscape: '🌿 Landscape',
+      building: '🏗️ Building',
+      perizinan: '📋 Perizinan',
+      pengujian: '🔬 Pengujian',
+      studi: '📊 Studi',
+      'penyelidikan-tanah': '🏔️ Penyelidikan Tanah'
+    };
+    return categoryMap[category] || '🏗️ Building';
+  };
 
   return (
     <Card className="group hover:shadow-2xl transition-all duration-500 overflow-hidden h-full bg-white border-2 border-gray-100 hover:border-red-200 card-hover">
@@ -41,7 +69,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ item }) => {
         {/* Category Badge */}
         <div className="absolute top-4 left-4">
           <Badge className={`${colors.badge} font-medium px-3 py-1 rounded-full shadow-lg`}>
-            {item.category === 'landscape' ? '🌿 Landscape' : '🏗️ Building'}
+            {getCategoryDisplay(item.category)}
           </Badge>
         </div>
 
