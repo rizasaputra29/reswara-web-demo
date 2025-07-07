@@ -4,11 +4,13 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Building2, Users, Award, Target, Eye, Heart, CheckCircle } from 'lucide-react';
-import { companyInfo, teamMembers } from '@/lib/data';
+import { useContentStore } from '@/lib/contentStore';
 import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
 
 const AboutPage = () => {
+  const { teamMembers, companySettings } = useContentStore();
+
   const values = [
     {
       icon: Target,
@@ -85,7 +87,7 @@ const AboutPage = () => {
               </h2>
               <div className="space-y-6 text-body">
                 <p>
-                  CV Reswara Praptama adalah perusahaan konsultan terkemuka yang mengkhususkan diri dalam pengembangan lingkungan dan bangunan lanskap. Dengan pengalaman lebih dari satu dekade, kami telah membantu berbagai klien menciptakan ruang yang tidak hanya indah secara estetika, tetapi juga fungsional dan berkelanjutan.
+                  {companySettings.description} Dengan pengalaman lebih dari satu dekade, kami telah membantu berbagai klien menciptakan ruang yang tidak hanya indah secara estetika, tetapi juga fungsional dan berkelanjutan.
                 </p>
                 <p>
                   Kami menyediakan layanan komprehensif mulai dari desain lanskap, pengembangan taman, konsultasi lingkungan, hingga perencanaan dan perizinan bangunan. Tim ahli kami terdiri dari arsitek, insinyur, dan konsultan berpengalaman yang berdedikasi untuk memberikan solusi terbaik.
@@ -204,7 +206,7 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Meet the Team Section */}
+      {/* Meet the Team Section - Dynamic Content */}
       <section className="section-padding bg-slate-50">
         <div className="container-responsive">
           <AnimatedSection className="text-center mb-16">
@@ -219,13 +221,16 @@ const AboutPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {teamMembers.map((member, index) => (
               <AnimatedCard key={member.id} index={index}>
-                <Card className="card-primary card-hover h-full">
+                <Card className="card-primary card-hover h-full group">
                   {/* Image Container */}
                   <div className="relative aspect-square overflow-hidden rounded-t-xl">
                     <img
                       src={member.image}
                       alt={member.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      onError={(e) => {
+                        e.target.src = 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400';
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>

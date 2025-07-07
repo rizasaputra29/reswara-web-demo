@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, CheckCircle, Star, Users, Award, Building2, Sparkles, Target, Zap, Shield, Phone, Mail, MapPin } from 'lucide-react';
-import { services, portfolioItems, companyInfo, incrementVisitorCount } from '@/lib/data';
+import { services, portfolioItems, incrementVisitorCount } from '@/lib/data';
+import { useContentStore } from '@/lib/contentStore';
 import ServiceCard from '@/components/ServiceCard';
 import PortfolioCard from '@/components/PortfolioCard';
 import AnimatedSection from '@/components/AnimatedSection';
@@ -14,14 +15,10 @@ import AnimatedCard from '@/components/AnimatedCard';
 import CounterAnimation from '@/components/CounterAnimation';
 
 const HomePage = () => {
+  const { heroContent, companySettings } = useContentStore();
+
   useEffect(() => {
     incrementVisitorCount();
-    // Track page view
-    fetch('/api/analytics/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'page_view', page: 'home' })
-    }).catch(console.error);
   }, []);
 
   const stats = [
@@ -49,7 +46,7 @@ const HomePage = () => {
 
   return (
     <div className="w-full overflow-hidden">
-      {/* Hero Section */}
+      {/* Hero Section - Dynamic Content */}
       <section className="relative min-h-screen flex items-center gradient-brand-light">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -59,25 +56,24 @@ const HomePage = () => {
 
         <div className="relative container-responsive py-32">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
+            {/* Left Content - Dynamic */}
             <div className="space-y-8">
               <AnimatedSection>
                 <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-6 px-4 py-2">
                   🏆 Trusted Since 2010
                 </Badge>
                 <h1 className="heading-xl">
-                  <span className="text-blue-600">Transform</span>
-                  <br />
-                  Your Space with
-                  <br />
-                  <span className="text-slate-900">Professional Excellence</span>
+                  {heroContent.title.split(' ').map((word, index) => (
+                    <span key={index} className={index === 0 ? 'text-blue-600' : 'text-slate-900'}>
+                      {word}{' '}
+                    </span>
+                  ))}
                 </h1>
               </AnimatedSection>
 
               <AnimatedSection delay={0.2}>
                 <p className="text-xl text-slate-600 leading-relaxed max-w-lg">
-                  Leading landscape development and building consulting services. 
-                  Creating sustainable, beautiful, and functional environments for over 15 years.
+                  {heroContent.description}
                 </p>
               </AnimatedSection>
 
@@ -95,30 +91,33 @@ const HomePage = () => {
                 </div>
               </AnimatedSection>
 
-              {/* Quick Contact */}
+              {/* Quick Contact - Dynamic */}
               <AnimatedSection delay={0.6}>
                 <div className="flex flex-wrap gap-6 pt-8 border-t border-slate-200">
                   <div className="flex items-center space-x-2">
                     <Phone className="h-5 w-5 text-blue-600" />
-                    <span className="text-sm text-slate-600">{companyInfo.phone}</span>
+                    <span className="text-sm text-slate-600">{companySettings.phone}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Mail className="h-5 w-5 text-blue-600" />
-                    <span className="text-sm text-slate-600">{companyInfo.email}</span>
+                    <span className="text-sm text-slate-600">{companySettings.email}</span>
                   </div>
                 </div>
               </AnimatedSection>
             </div>
 
-            {/* Right Content - Hero Image */}
+            {/* Right Content - Hero Image - Dynamic */}
             <AnimatedSection direction="right" className="relative">
               <div className="relative">
                 <div className="absolute -inset-4 gradient-brand rounded-3xl opacity-20 blur-xl" />
                 <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden">
                   <img
-                    src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800"
+                    src={heroContent.image}
                     alt="Beautiful landscape design"
                     className="w-full aspect-[4/3] object-cover rounded-3xl"
+                    onError={(e) => {
+                      e.target.src = 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl" />
                 </div>
