@@ -30,10 +30,42 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
       icon: 'bg-blue-100',
       iconText: 'text-blue-600',
       badge: 'bg-blue-100 text-blue-700 border-blue-200'
+    },
+    perizinan: {
+      bg: 'bg-purple-50',
+      border: 'border-purple-200',
+      text: 'text-purple-700',
+      icon: 'bg-purple-100',
+      iconText: 'text-purple-600',
+      badge: 'bg-purple-100 text-purple-700 border-purple-200'
+    },
+    pengujian: {
+      bg: 'bg-orange-50',
+      border: 'border-orange-200',
+      text: 'text-orange-700',
+      icon: 'bg-orange-100',
+      iconText: 'text-orange-600',
+      badge: 'bg-orange-100 text-orange-700 border-orange-200'
+    },
+    studi: {
+      bg: 'bg-indigo-50',
+      border: 'border-indigo-200',
+      text: 'text-indigo-700',
+      icon: 'bg-indigo-100',
+      iconText: 'text-indigo-600',
+      badge: 'bg-indigo-100 text-indigo-700 border-indigo-200'
+    },
+    'penyelidikan-tanah': {
+      bg: 'bg-amber-50',
+      border: 'border-amber-200',
+      text: 'text-amber-700',
+      icon: 'bg-amber-100',
+      iconText: 'text-amber-600',
+      badge: 'bg-amber-100 text-amber-700 border-amber-200'
     }
   };
 
-  const colors = categoryColors[service.category];
+  const colors = categoryColors[service.category as keyof typeof categoryColors];
 
   return (
     <Card className={`group hover:shadow-xl transition-all duration-300 border-2 ${colors.border} ${colors.bg} h-full relative overflow-hidden card-hover`}>
@@ -46,7 +78,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
             {IconComponent && <IconComponent className={`h-8 w-8 ${colors.iconText}`} />}
           </div>
           <Badge className={`${colors.badge} font-medium px-3 py-1 rounded-full`}>
-            {service.category === 'landscape' ? '🌿 Landscape' : '🏗️ Building'}
+            {service.category === 'landscape' ? '🌿 Landscape' : 
+             service.category === 'building' ? '🏗️ Building' :
+             service.category === 'perizinan' ? '📋 Perizinan' :
+             service.category === 'pengujian' ? '🔬 Pengujian' :
+             service.category === 'studi' ? '📊 Studi' :
+             service.category === 'penyelidikan-tanah' ? '🏔️ Penyelidikan Tanah' : 
+             service.category}
           </Badge>
         </div>
         <CardTitle className={`text-xl font-bold ${colors.text} group-hover:text-red-600 transition-colors duration-300`}>
