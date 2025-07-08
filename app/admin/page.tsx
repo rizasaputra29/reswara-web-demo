@@ -55,24 +55,15 @@ const AdminDashboard = () => {
     addTeamMember,
     updateTeamMember,
     deleteTeamMember,
-    updateCompanySettings
+    updateCompanySettings,
+    exportContent,
+    importContent,
+    resetToDefaults
   } = useContentStore();
 
   // Local state for editing
-  const [heroForm, setHeroForm] = useState({
-    title: '',
-    description: '',
-    image: ''
-  });
-  const [settingsForm, setSettingsForm] = useState({
-    name: '',
-    tagline: '',
-    description: '',
-    phone: '',
-    email: '',
-    address: '',
-    whatsapp: ''
-  });
+  const [heroForm, setHeroForm] = useState(heroContent);
+  const [settingsForm, setSettingsForm] = useState(companySettings);
 
   useEffect(() => {
     const loggedIn = localStorage.getItem('admin_logged_in') === 'true';
@@ -88,37 +79,34 @@ const AdminDashboard = () => {
 
   // Update forms when content changes
   useEffect(() => {
-    if (heroContent) {
-      setHeroForm({
-        title: heroContent.title || '',
-        description: heroContent.description || '',
-        image: heroContent.image || ''
-      });
-    }
+    setHeroForm(heroContent);
   }, [heroContent]);
 
   useEffect(() => {
-    if (companySettings) {
-      setSettingsForm({
-        name: companySettings.name || '',
-        tagline: companySettings.tagline || '',
-        description: companySettings.description || '',
-        phone: companySettings.phone || '',
-        email: companySettings.email || '',
-        address: companySettings.address || '',
-        whatsapp: companySettings.whatsapp || ''
-      });
-    }
+    setSettingsForm(companySettings);
   }, [companySettings]);
 
   const loadDashboardData = async () => {
     try {
-      // Load contacts from API
-      const response = await fetch('/api/contact');
-      if (response.ok) {
-        const contactsData = await response.json();
-        setContacts(contactsData);
-      }
+      // Simulate loading contacts (in real app, this would be from API)
+      setContacts([
+        {
+          _id: '1',
+          name: 'John Doe',
+          email: 'john@example.com',
+          message: 'Interested in landscape design services',
+          status: 'new',
+          createdAt: new Date().toISOString()
+        },
+        {
+          _id: '2',
+          name: 'Jane Smith',
+          email: 'jane@example.com',
+          message: 'Need consultation for building permits',
+          status: 'contacted',
+          createdAt: new Date().toISOString()
+        }
+      ]);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     }
@@ -132,7 +120,7 @@ const AdminDashboard = () => {
   const saveHeroContent = async () => {
     setIsSaving(true);
     try {
-      await updateHeroContent(heroForm);
+      updateHeroContent(heroForm);
       alert('Hero content updated successfully! Changes are now live on the website.');
     } catch (error) {
       alert('Error saving hero content');
@@ -144,7 +132,7 @@ const AdminDashboard = () => {
   const saveCompanySettings = async () => {
     setIsSaving(true);
     try {
-      await updateCompanySettings(settingsForm);
+      updateCompanySettings(settingsForm);
       alert('Company settings updated successfully! Changes are now live on the website.');
     } catch (error) {
       alert('Error saving company settings');
@@ -153,42 +141,66 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleAddTeamMember = async () => {
+  const handleAddTeamMember = () => {
     if (newMember.name && newMember.position) {
-      try {
-        const member = {
-          ...newMember,
-          expertise: typeof newMember.expertise === 'string' 
-            ? newMember.expertise.split(',').map(s => s.trim()).filter(s => s !== '')
-            : newMember.expertise
-        };
-        await addTeamMember(member);
-        setNewMember({ name: '', position: '', image: '', bio: '', expertise: [] });
-        alert('Team member added successfully! Changes are now live on the website.');
-      } catch (error) {
-        alert('Error adding team member');
-      }
+      const member = {
+        ...newMember,
+        expertise: typeof newMember.expertise === 'string' 
+          ? newMember.expertise.split(',').map(s => s.trim()).filter(s => s !== '')
+          : newMember.expertise
+      };
+      addTeamMember(member);
+      setNewMember({ name: '', position: '', image: '', bio: '', expertise: [] });
+      alert('Team member added successfully! Changes are now live on the website.');
     }
   };
 
-  const handleUpdateTeamMember = async (id, updatedMember) => {
-    try {
-      await updateTeamMember(id, updatedMember);
-      setEditingMember(null);
-      alert('Team member updated successfully! Changes are now live on the website.');
-    } catch (error) {
-      alert('Error updating team member');
-    }
+  const handleUpdateTeamMember = (id, updatedMember) => {
+    updateTeamMember(id, updatedMember);
+    setEditingMember(null);
+    alert('Team member updated successfully! Changes are now live on the website.');
   };
 
-  const handleDeleteTeamMember = async (id) => {
+  const handleDeleteTeamMember = (id) => {
     if (confirm('Are you sure you want to delete this team member?')) {
-      try {
-        await deleteTeamMember(id);
-        alert('Team member deleted successfully! Changes are now live on the website.');
-      } catch (error) {
-        alert('Error deleting team member');
-      }
+      deleteTeamMember(id);
+      alert('Team member deleted successfully! Changes are now live on the website.');
+    }
+  };
+
+  const handleExportContent = () => {
+    const content = exportContent();
+    const blob = new Blob([content], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `reswara-content-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportContent = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          importContent(e.target.result);
+          alert('Content imported successfully! Changes are now live on the website.');
+        } catch (error) {
+          alert('Error importing content: ' + error.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const handleResetContent = () => {
+    if (confirm('Are you sure you want to reset all content to defaults? This cannot be undone.')) {
+      resetToDefaults();
+      alert('Content reset to defaults! Changes are now live on the website.');
     }
   };
 
@@ -205,12 +217,12 @@ const AdminDashboard = () => {
       title: 'Total Visitors',
       value: visitorCount.toString(),
       icon: Eye,
-      color: 'text-red-600',
-      bgColor: 'bg-red-100'
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
     },
     {
       title: 'Team Members',
-      value: teamMembers?.length?.toString() || '0',
+      value: teamMembers.length.toString(),
       icon: Users,
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-100'
@@ -232,16 +244,16 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-red-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-white shadow-sm border-b border-slate-200">
         <div className="container-responsive">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <Settings className="h-8 w-8 text-red-600" />
+              <Settings className="h-8 w-8 text-blue-600" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-sm text-gray-600">CV Reswara Praptama - Live CMS</p>
+                <h1 className="text-xl font-bold text-slate-900">Admin Dashboard</h1>
+                <p className="text-sm text-slate-600">CV Reswara Praptama - Live CMS</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -265,8 +277,8 @@ const AdminDashboard = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600">{stat.title}</p>
-                    <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-sm text-slate-600">{stat.title}</p>
+                    <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
                   </div>
                   <div className={`p-3 rounded-lg ${stat.bgColor}`}>
                     <stat.icon className={`h-6 w-6 ${stat.color}`} />
@@ -279,11 +291,12 @@ const AdminDashboard = () => {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="hero">Hero Content</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
+            <TabsTrigger value="backup">Backup</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -298,15 +311,15 @@ const AdminDashboard = () => {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Hero Content</span>
+                      <span className="text-sm text-slate-600">Hero Content</span>
                       <Badge className="bg-green-100 text-green-700">Live</Badge>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Team Members</span>
-                      <span className="font-semibold">{teamMembers?.length || 0} Active</span>
+                      <span className="text-sm text-slate-600">Team Members</span>
+                      <span className="font-semibold">{teamMembers.length} Active</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Company Settings</span>
+                      <span className="text-sm text-slate-600">Company Settings</span>
                       <Badge className="bg-green-100 text-green-700">Synced</Badge>
                     </div>
                   </div>
@@ -324,15 +337,15 @@ const AdminDashboard = () => {
                   <div className="space-y-3">
                     <div className="flex items-center space-x-3">
                       <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">Content updates are live</span>
+                      <span className="text-sm text-slate-600">Content updates are live</span>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">Real-time sync active</span>
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-sm text-slate-600">Real-time sync active</span>
                     </div>
                     <div className="flex items-center space-x-3">
                       <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">Dashboard connected</span>
+                      <span className="text-sm text-slate-600">Dashboard connected</span>
                     </div>
                   </div>
                 </CardContent>
@@ -388,7 +401,7 @@ const AdminDashboard = () => {
                   
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Live Preview</label>
-                    <div className="border rounded-lg p-4 bg-red-50">
+                    <div className="border rounded-lg p-4 bg-slate-50">
                       <img 
                         src={heroForm.image} 
                         alt="Hero preview" 
@@ -398,7 +411,7 @@ const AdminDashboard = () => {
                         }}
                       />
                       <h3 className="text-lg font-bold mb-2">{heroForm.title}</h3>
-                      <p className="text-sm text-gray-600">{heroForm.description}</p>
+                      <p className="text-sm text-slate-600">{heroForm.description}</p>
                     </div>
                   </div>
                 </div>
@@ -416,7 +429,7 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 {/* Add New Team Member */}
-                <div className="mb-8 p-4 border rounded-lg bg-red-50">
+                <div className="mb-8 p-4 border rounded-lg bg-slate-50">
                   <h3 className="text-lg font-semibold mb-4">Add New Team Member</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
@@ -456,7 +469,7 @@ const AdminDashboard = () => {
                 {/* Team Members List */}
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Current Team Members</h3>
-                  {teamMembers?.map((member) => (
+                  {teamMembers.map((member) => (
                     <div key={member.id} className="flex items-center space-x-4 p-4 border rounded-lg">
                       <img
                         src={member.image}
@@ -468,8 +481,8 @@ const AdminDashboard = () => {
                       />
                       <div className="flex-1">
                         <h3 className="font-semibold">{member.name}</h3>
-                        <p className="text-sm text-gray-600">{member.position}</p>
-                        <p className="text-xs text-gray-500">{member.expertise?.join(', ')}</p>
+                        <p className="text-sm text-slate-600">{member.position}</p>
+                        <p className="text-xs text-slate-500">{member.expertise.join(', ')}</p>
                       </div>
                       <div className="flex space-x-2">
                         <Button 
@@ -567,6 +580,61 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="backup" className="space-y-6">
+            <Card className="card-primary">
+              <CardHeader>
+                <CardTitle>Content Backup & Management</CardTitle>
+                <CardDescription>
+                  Export, import, or reset website content
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button onClick={handleExportContent} className="btn-primary">
+                    <Download className="w-4 h-4 mr-2" />
+                    Export Content
+                  </Button>
+                  
+                  <div>
+                    <input
+                      type="file"
+                      accept=".json"
+                      onChange={handleImportContent}
+                      style={{ display: 'none' }}
+                      id="import-file"
+                    />
+                    <Button 
+                      onClick={() => document.getElementById('import-file').click()}
+                      className="btn-secondary w-full"
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Import Content
+                    </Button>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleResetContent} 
+                    variant="destructive"
+                    className="w-full"
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Reset to Defaults
+                  </Button>
+                </div>
+                
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-semibold text-blue-900 mb-2">How it works:</h4>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• <strong>Export:</strong> Download all current content as a JSON file</li>
+                    <li>• <strong>Import:</strong> Upload a previously exported JSON file to restore content</li>
+                    <li>• <strong>Reset:</strong> Restore all content to original default values</li>
+                    <li>• All changes are applied immediately to the live website</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
 
@@ -599,7 +667,7 @@ const AdminDashboard = () => {
               />
               <Input
                 placeholder="Expertise (comma separated)"
-                value={editingMember.expertise?.join(', ') || ''}
+                value={editingMember.expertise.join(', ')}
                 onChange={(e) => setEditingMember({...editingMember, expertise: e.target.value.split(',').map(s => s.trim())})}
               />
             </div>

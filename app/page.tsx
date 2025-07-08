@@ -22,7 +22,7 @@ const HomePage = () => {
   }, []);
 
   const stats = [
-    { icon: Building2, value: 100, label: 'Projects Completed', suffix: '+', color: 'red' },
+    { icon: Building2, value: 100, label: 'Projects Completed', suffix: '+', color: 'blue' },
     { icon: Users, value: 50, label: 'Happy Clients', suffix: '+', color: 'emerald' },
     { icon: Award, value: 15, label: 'Years Experience', suffix: '+', color: 'amber' },
     { icon: Star, value: 4.9, label: 'Client Rating', suffix: '', color: 'purple' },
@@ -47,10 +47,10 @@ const HomePage = () => {
   return (
     <div className="w-full overflow-hidden">
       {/* Hero Section - Dynamic Content */}
-      <section className="relative min-h-screen flex items-center bg-gradient-to-br from-red-50 via-white to-red-50">
+      <section className="relative min-h-screen flex items-center gradient-brand-light">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
-            backgroundImage: 'radial-gradient(circle at 25% 25%, rgba(220, 38, 38, 0.3) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(5, 150, 105, 0.3) 0%, transparent 50%)',
+            backgroundImage: 'radial-gradient(circle at 25% 25%, rgba(30, 64, 175, 0.3) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(5, 150, 105, 0.3) 0%, transparent 50%)',
           }} />
         </div>
 
@@ -59,28 +59,21 @@ const HomePage = () => {
             {/* Left Content - Dynamic */}
             <div className="space-y-8">
               <AnimatedSection>
-                <Badge className="bg-red-100 text-red-700 border-red-200 mb-6 px-4 py-2">
+                <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-6 px-4 py-2">
                   🏆 Trusted Since 2010
                 </Badge>
                 <h1 className="heading-xl">
-                  {heroContent?.title ? (
-                    heroContent.title.split(' ').map((word, index) => (
-                      <span key={index} className={index === 0 ? 'text-red-600' : 'text-gray-900'}>
-                        {word}{' '}
-                      </span>
-                    ))
-                  ) : (
-                    <>
-                      <span className="text-red-600">Transform </span>
-                      <span className="text-gray-900">Your Space with Professional Excellence</span>
-                    </>
-                  )}
+                  {heroContent.title.split(' ').map((word, index) => (
+                    <span key={index} className={index === 0 ? 'text-blue-600' : 'text-slate-900'}>
+                      {word}{' '}
+                    </span>
+                  ))}
                 </h1>
               </AnimatedSection>
 
               <AnimatedSection delay={0.2}>
-                <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
-                  {heroContent?.description || 'Leading landscape development and building consulting services. Creating sustainable, beautiful, and functional environments for over 15 years.'}
+                <p className="text-xl text-slate-600 leading-relaxed max-w-lg">
+                  {heroContent.description}
                 </p>
               </AnimatedSection>
 
@@ -100,14 +93,14 @@ const HomePage = () => {
 
               {/* Quick Contact - Dynamic */}
               <AnimatedSection delay={0.6}>
-                <div className="flex flex-wrap gap-6 pt-8 border-t border-gray-200">
+                <div className="flex flex-wrap gap-6 pt-8 border-t border-slate-200">
                   <div className="flex items-center space-x-2">
-                    <Phone className="h-5 w-5 text-red-600" />
-                    <span className="text-sm text-gray-600">{companySettings?.phone || '+62 21 1234 5678'}</span>
+                    <Phone className="h-5 w-5 text-blue-600" />
+                    <span className="text-sm text-slate-600">{companySettings.phone}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Mail className="h-5 w-5 text-red-600" />
-                    <span className="text-sm text-gray-600">{companySettings?.email || 'info@reswarapraptama.com'}</span>
+                    <Mail className="h-5 w-5 text-blue-600" />
+                    <span className="text-sm text-slate-600">{companySettings.email}</span>
                   </div>
                 </div>
               </AnimatedSection>
@@ -116,10 +109,10 @@ const HomePage = () => {
             {/* Right Content - Hero Image - Dynamic */}
             <AnimatedSection direction="right" className="relative">
               <div className="relative">
-                <div className="absolute -inset-4 bg-red-600 rounded-3xl opacity-20 blur-xl" />
+                <div className="absolute -inset-4 gradient-brand rounded-3xl opacity-20 blur-xl" />
                 <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden">
                   <img
-                    src={heroContent?.image || 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800'}
+                    src={heroContent.image}
                     alt="Beautiful landscape design"
                     className="w-full aspect-[4/3] object-cover rounded-3xl"
                     onError={(e) => {
@@ -142,9 +135,9 @@ const HomePage = () => {
               Our Services
             </Badge>
             <h2 className="heading-lg mb-6">
-              Comprehensive <span className="text-red-600">Solutions</span>
+              Comprehensive <span className="text-blue-600">Solutions</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
               From landscape design to building consulting, we provide end-to-end services 
               for your development needs
             </p>
@@ -170,16 +163,16 @@ const HomePage = () => {
       </section>
 
       {/* Portfolio Preview */}
-      <section className="section-padding bg-red-50">
+      <section className="section-padding bg-slate-50">
         <div className="container-responsive">
           <AnimatedSection className="text-center mb-16">
-            <Badge className="bg-red-100 text-red-700 border-red-200 mb-4 px-4 py-2">
+            <Badge className="bg-blue-100 text-blue-700 border-blue-200 mb-4 px-4 py-2">
               Portfolio
             </Badge>
             <h2 className="heading-lg mb-6">
               Featured <span className="text-emerald-600">Projects</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
               Showcasing our expertise in creating remarkable spaces that inspire and endure
             </p>
           </AnimatedSection>
@@ -204,7 +197,7 @@ const HomePage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="section-padding bg-red-600 text-white relative overflow-hidden">
+      <section className="section-padding gradient-brand text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: 'radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.3) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 50%)',
         }} />
@@ -214,7 +207,7 @@ const HomePage = () => {
             <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-white">
               Total Project dan Client
             </h2>
-            <p className="text-xl text-red-100">Numbers that speak for our excellence</p>
+            <p className="text-xl text-blue-100">Numbers that speak for our excellence</p>
           </AnimatedSection>
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -227,7 +220,7 @@ const HomePage = () => {
                   <div className="text-4xl font-bold text-white mb-2">
                     <CounterAnimation end={stat.value} suffix={stat.suffix} />
                   </div>
-                  <div className="text-red-100 font-medium">{stat.label}</div>
+                  <div className="text-blue-100 font-medium">{stat.label}</div>
                 </div>
               </AnimatedCard>
             ))}
@@ -243,9 +236,9 @@ const HomePage = () => {
               Business Partner
             </Badge>
             <h2 className="heading-lg mb-6">
-              Trusted by Leading <span className="text-red-600">Organizations</span>
+              Trusted by Leading <span className="text-blue-600">Organizations</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
               We're proud to work with industry leaders and government institutions
             </p>
           </AnimatedSection>
@@ -253,11 +246,11 @@ const HomePage = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
             {businessPartners.map((partner, index) => (
               <AnimatedCard key={index} index={index}>
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 card-hover text-center">
-                  <div className="w-full h-16 bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
-                    <Building2 className="h-8 w-8 text-gray-400" />
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover text-center">
+                  <div className="w-full h-16 bg-slate-100 rounded-lg mb-4 flex items-center justify-center">
+                    <Building2 className="h-8 w-8 text-slate-400" />
                   </div>
-                  <p className="text-sm font-medium text-gray-600">{partner.name}</p>
+                  <p className="text-sm font-medium text-slate-600">{partner.name}</p>
                 </div>
               </AnimatedCard>
             ))}
@@ -266,7 +259,7 @@ const HomePage = () => {
       </section>
 
       {/* Documentation/Certifications */}
-      <section className="section-padding bg-red-50">
+      <section className="section-padding bg-slate-50">
         <div className="container-responsive">
           <AnimatedSection className="text-center mb-16">
             <Badge className="bg-purple-100 text-purple-700 border-purple-200 mb-4 px-4 py-2">
@@ -275,7 +268,7 @@ const HomePage = () => {
             <h2 className="heading-lg mb-6">
               Certified <span className="text-purple-600">Excellence</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
               Our certifications and quality standards ensure professional service delivery
             </p>
           </AnimatedSection>
@@ -290,13 +283,13 @@ const HomePage = () => {
               <AnimatedCard key={index} index={index}>
                 <Card className="card-primary text-center h-full card-hover">
                   <CardHeader>
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-2xl mx-auto mb-4">
-                      <cert.icon className="h-8 w-8 text-red-600" />
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mx-auto mb-4">
+                      <cert.icon className="h-8 w-8 text-blue-600" />
                     </div>
-                    <CardTitle className="text-lg font-semibold text-gray-900">{cert.title}</CardTitle>
+                    <CardTitle className="text-lg font-semibold text-slate-900">{cert.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="text-gray-600">
+                    <CardDescription className="text-slate-600">
                       {cert.description}
                     </CardDescription>
                   </CardContent>
@@ -308,18 +301,18 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="section-padding bg-gray-900 text-white relative overflow-hidden">
+      <section className="section-padding bg-slate-900 text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: 'radial-gradient(circle at 30% 70%, rgba(220, 38, 38, 0.5) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(5, 150, 105, 0.5) 0%, transparent 50%)',
+          backgroundImage: 'radial-gradient(circle at 30% 70%, rgba(30, 64, 175, 0.5) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(5, 150, 105, 0.5) 0%, transparent 50%)',
         }} />
         
         <div className="relative container-responsive text-center">
           <AnimatedSection>
             <Sparkles className="h-16 w-16 text-emerald-400 mx-auto mb-6" />
             <h2 className="text-4xl lg:text-6xl font-bold mb-6">
-              Ready to <span className="text-red-400">Transform</span> Your Space?
+              Ready to <span className="text-blue-400">Transform</span> Your Space?
             </h2>
-            <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
+            <p className="text-xl text-slate-300 mb-10 max-w-3xl mx-auto">
               Let's work together to create sustainable and beautiful environments 
               that exceed your expectations and stand the test of time.
             </p>
@@ -327,7 +320,7 @@ const HomePage = () => {
               <Button className="btn-primary">
                 <Link href="/contact">Start Your Project</Link>
               </Button>
-              <Button className="btn-secondary bg-transparent border-white text-white hover:bg-white hover:text-gray-900">
+              <Button className="btn-secondary bg-transparent border-white text-white hover:bg-white hover:text-slate-900">
                 <Link href="/portfolio">View Our Work</Link>
               </Button>
             </div>
