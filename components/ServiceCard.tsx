@@ -68,16 +68,16 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
   const colors = categoryColors[service.category as keyof typeof categoryColors];
 
   return (
-    <Card className={`group hover:shadow-xl transition-all duration-300 border-2 ${colors.border} ${colors.bg} h-full relative overflow-hidden card-hover`}>
+    <Card className={`group hover:shadow-xl transition-all duration-300 border-2 ${colors?.border || 'border-gray-200'} ${colors?.bg || 'bg-white'} h-full relative overflow-hidden card-hover`}>
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       <CardHeader className="pb-4 relative z-10">
         <div className="flex items-center justify-between mb-4">
-          <div className={`p-4 ${colors.icon} rounded-2xl group-hover:shadow-lg transition-all duration-300`}>
-            {IconComponent && <IconComponent className={`h-8 w-8 ${colors.iconText}`} />}
+          <div className={`p-4 ${colors?.icon || 'bg-gray-100'} rounded-2xl group-hover:shadow-lg transition-all duration-300`}>
+            {IconComponent && <IconComponent className={`h-8 w-8 ${colors?.iconText || 'text-gray-600'}`} />}
           </div>
-          <Badge className={`${colors.badge} font-medium px-3 py-1 rounded-full`}>
+          <Badge className={`${colors?.badge || 'bg-gray-100 text-gray-700'} font-medium px-3 py-1 rounded-full`}>
             {service.category === 'landscape' ? '🌿 Landscape' : 
              service.category === 'building' ? '🏗️ Building' :
              service.category === 'perizinan' ? '📋 Perizinan' :
@@ -87,7 +87,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
              service.category}
           </Badge>
         </div>
-        <CardTitle className={`text-xl font-bold ${colors.text} group-hover:text-red-600 transition-colors duration-300`}>
+        <CardTitle className={`text-xl font-bold ${colors?.text || 'text-gray-900'} group-hover:text-red-600 transition-colors duration-300`}>
           {service.title}
         </CardTitle>
       </CardHeader>
