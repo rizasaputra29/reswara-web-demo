@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  firstName String?
+  lastName  String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  lastLogin DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model HeroContent {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  image       String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("hero_content")
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  position  String
+  image     String
+  bio       String
+  expertise String[] // Array of strings
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("team_members")
+}
+
+model CompanySettings {
+  id          String   @id @default(cuid())
+  name        String
+  tagline     String
+  description String
+  phone       String
+  email       String
+  address     String
+  whatsapp    String
+  website     String?
+  linkedin    String?
+  instagram   String?
+  facebook    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("company_settings")
+}
+
+model Contact {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  service   String?
+  message   String
+  status    ContactStatus @default(NEW)
+  priority  Priority      @default(MEDIUM)
+  source    String        @default("website")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("contacts")
+}
+
+model Portfolio {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  image       String
+  category    String
+  subcategory String?
+  year        String
+  client      String
+  location    String?
+  featured    Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("portfolios")
+}
+
+model Analytics {
+  id        String   @id @default(cuid())
+  type      String
+  page      String?
+  data      Json?
+  userAgent String?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@map("analytics")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum ContactStatus {
+  NEW
+  CONTACTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}

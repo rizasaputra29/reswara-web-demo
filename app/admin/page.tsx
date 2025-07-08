@@ -12,7 +12,6 @@ import {
   Users, 
   Eye, 
   Settings, 
-  Image, 
   LogOut, 
   BarChart3,
   TrendingUp,
@@ -24,14 +23,15 @@ import {
   Save,
   Upload,
   Download,
-  RefreshCw
+  RefreshCw,
+  AlertCircle,
+  CheckCircle
 } from 'lucide-react';
-import { getVisitorCount } from '@/lib/data';
 import { useContentStore } from '@/lib/contentStore';
 
 const AdminDashboard = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [visitorCount, setVisitorCount] = useState(0);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [editingMember, setEditingMember] = useState(null);
@@ -42,12 +42,14 @@ const AdminDashboard = () => {
     bio: '',
     expertise: []
   });
-  const [contacts, setContacts] = useState([]);
+  const [dashboardStats, setDashboardStats] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState('');
   const router = useRouter();
 
   // Use the content store for real-time updates
   const {
+    isLoading: contentLoading,
     heroContent,
     teamMembers,
     companySettings,
@@ -57,7 +59,6 @@ const AdminDashboard = () => {
     deleteTeamMember,
     updateCompanySettings,
     exportContent,
-    importContent,
     resetToDefaults
   } = useContentStore();
 
@@ -67,11 +68,13 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const loggedIn = localStorage.getItem('admin_logged_in') === 'true';
-    if (!loggedIn) {
+    const userData = localStorage.getItem('admin_user');
+    
+    if (!loggedIn || !userData) {
       router.push('/admin/login');
     } else {
       setIsLoggedIn(true);
-      setVisitorCount(getVisitorCount());
+      setUser(JSON.parse(userData));
       loadDashboardData();
     }
     setLoading(false);
@@ -88,42 +91,43 @@ const AdminDashboard = () => {
 
   const loadDashboardData = async () => {
     try {
-      // Simulate loading contacts (in real app, this would be from API)
-      setContacts([
-        {
-          _id: '1',
-          name: 'John Doe',
-          email: 'john@example.com',
-          message: 'Interested in landscape design services',
-          status: 'new',
-          createdAt: new Date().toISOString()
-        },
-        {
-          _id: '2',
-          name: 'Jane Smith',
-          email: 'jane@example.com',
-          message: 'Need consultation for building permits',
-          status: 'contacted',
-          createdAt: new Date().toISOString()
-        }
-      ]);
+      const response = await fetch('/api/admin/dashboard');
+      if (response.ok) {
+        const data = await response.json();
+        setDashboardStats(data);
+      }
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('admin_logged_in');
-    router.push('/admin/login');
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      localStorage.removeItem('admin_logged_in');
+      localStorage.removeItem('admin_user');
+      router.push('/admin/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force logout even if API call fails
+      localStorage.removeItem('admin_logged_in');
+      localStorage.removeItem('admin_user');
+      router.push('/admin/login');
+    }
+  };
+
+  const showSaveStatus = (message: string, type: 'success' | 'error') => {
+    setSaveStatus(message);
+    setTimeout(() => setSaveStatus(''), 3000);
   };
 
   const saveHeroContent = async () => {
     setIsSaving(true);
     try {
-      updateHeroContent(heroForm);
-      alert('Hero content updated successfully! Changes are now live on the website.');
+      await updateHeroContent(heroForm);
+      showSaveStatus('Hero content updated successfully!', 'success');
     } catch (error) {
-      alert('Error saving hero content');
+      showSaveStatus('Error saving hero content', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -132,39 +136,51 @@ const AdminDashboard = () => {
   const saveCompanySettings = async () => {
     setIsSaving(true);
     try {
-      updateCompanySettings(settingsForm);
-      alert('Company settings updated successfully! Changes are now live on the website.');
+      await updateCompanySettings(settingsForm);
+      showSaveStatus('Company settings updated successfully!', 'success');
     } catch (error) {
-      alert('Error saving company settings');
+      showSaveStatus('Error saving company settings', 'error');
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleAddTeamMember = () => {
+  const handleAddTeamMember = async () => {
     if (newMember.name && newMember.position) {
-      const member = {
-        ...newMember,
-        expertise: typeof newMember.expertise === 'string' 
-          ? newMember.expertise.split(',').map(s => s.trim()).filter(s => s !== '')
-          : newMember.expertise
-      };
-      addTeamMember(member);
-      setNewMember({ name: '', position: '', image: '', bio: '', expertise: [] });
-      alert('Team member added successfully! Changes are now live on the website.');
+      try {
+        const member = {
+          ...newMember,
+          expertise: typeof newMember.expertise === 'string' 
+            ? newMember.expertise.split(',').map(s => s.trim()).filter(s => s !== '')
+            : newMember.expertise
+        };
+        await addTeamMember(member);
+        setNewMember({ name: '', position: '', image: '', bio: '', expertise: [] });
+        showSaveStatus('Team member added successfully!', 'success');
+      } catch (error) {
+        showSaveStatus('Error adding team member', 'error');
+      }
     }
   };
 
-  const handleUpdateTeamMember = (id, updatedMember) => {
-    updateTeamMember(id, updatedMember);
-    setEditingMember(null);
-    alert('Team member updated successfully! Changes are now live on the website.');
+  const handleUpdateTeamMember = async (id: string, updatedMember: any) => {
+    try {
+      await updateTeamMember(id, updatedMember);
+      setEditingMember(null);
+      showSaveStatus('Team member updated successfully!', 'success');
+    } catch (error) {
+      showSaveStatus('Error updating team member', 'error');
+    }
   };
 
-  const handleDeleteTeamMember = (id) => {
+  const handleDeleteTeamMember = async (id: string) => {
     if (confirm('Are you sure you want to delete this team member?')) {
-      deleteTeamMember(id);
-      alert('Team member deleted successfully! Changes are now live on the website.');
+      try {
+        await deleteTeamMember(id);
+        showSaveStatus('Team member deleted successfully!', 'success');
+      } catch (error) {
+        showSaveStatus('Error deleting team member', 'error');
+      }
     }
   };
 
@@ -181,31 +197,26 @@ const AdminDashboard = () => {
     URL.revokeObjectURL(url);
   };
 
-  const handleImportContent = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          importContent(e.target.result);
-          alert('Content imported successfully! Changes are now live on the website.');
-        } catch (error) {
-          alert('Error importing content: ' + error.message);
-        }
-      };
-      reader.readAsText(file);
-    }
-  };
-
-  const handleResetContent = () => {
+  const handleResetContent = async () => {
     if (confirm('Are you sure you want to reset all content to defaults? This cannot be undone.')) {
-      resetToDefaults();
-      alert('Content reset to defaults! Changes are now live on the website.');
+      try {
+        await resetToDefaults();
+        showSaveStatus('Content reset to defaults!', 'success');
+      } catch (error) {
+        showSaveStatus('Error resetting content', 'error');
+      }
     }
   };
 
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  if (loading || contentLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!isLoggedIn) {
@@ -213,13 +224,6 @@ const AdminDashboard = () => {
   }
 
   const stats = [
-    {
-      title: 'Total Visitors',
-      value: visitorCount.toString(),
-      icon: Eye,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
-    },
     {
       title: 'Team Members',
       value: teamMembers.length.toString(),
@@ -229,10 +233,17 @@ const AdminDashboard = () => {
     },
     {
       title: 'Contact Inquiries',
-      value: contacts.length.toString(),
+      value: dashboardStats?.totalContacts?.toString() || '0',
       icon: Calendar,
       color: 'text-purple-600',
       bgColor: 'bg-purple-100'
+    },
+    {
+      title: 'New Contacts',
+      value: dashboardStats?.newContacts?.toString() || '0',
+      icon: Eye,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
     },
     {
       title: 'Live Updates',
@@ -260,6 +271,11 @@ const AdminDashboard = () => {
               <Badge className="bg-green-100 text-green-700 border-green-200">
                 🟢 Live Updates Active
               </Badge>
+              {user && (
+                <div className="text-sm text-slate-600">
+                  Welcome, {user.username}
+                </div>
+              )}
               <Button onClick={handleLogout} variant="outline" className="flex items-center space-x-2">
                 <LogOut className="h-4 w-4" />
                 <span>Logout</span>
@@ -268,6 +284,22 @@ const AdminDashboard = () => {
           </div>
         </div>
       </header>
+
+      {/* Save Status */}
+      {saveStatus && (
+        <div className="fixed top-20 right-4 z-50">
+          <div className={`flex items-center space-x-2 px-4 py-2 rounded-lg shadow-lg ${
+            saveStatus.includes('Error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
+          }`}>
+            {saveStatus.includes('Error') ? (
+              <AlertCircle className="h-4 w-4" />
+            ) : (
+              <CheckCircle className="h-4 w-4" />
+            )}
+            <span className="text-sm">{saveStatus}</span>
+          </div>
+        </div>
+      )}
 
       <div className="container-responsive py-8">
         {/* Stats Grid */}
@@ -590,28 +622,11 @@ const AdminDashboard = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Button onClick={handleExportContent} className="btn-primary">
                     <Download className="w-4 h-4 mr-2" />
                     Export Content
                   </Button>
-                  
-                  <div>
-                    <input
-                      type="file"
-                      accept=".json"
-                      onChange={handleImportContent}
-                      style={{ display: 'none' }}
-                      id="import-file"
-                    />
-                    <Button 
-                      onClick={() => document.getElementById('import-file').click()}
-                      className="btn-secondary w-full"
-                    >
-                      <Upload className="w-4 h-4 mr-2" />
-                      Import Content
-                    </Button>
-                  </div>
                   
                   <Button 
                     onClick={handleResetContent} 
@@ -627,7 +642,6 @@ const AdminDashboard = () => {
                   <h4 className="font-semibold text-blue-900 mb-2">How it works:</h4>
                   <ul className="text-sm text-blue-800 space-y-1">
                     <li>• <strong>Export:</strong> Download all current content as a JSON file</li>
-                    <li>• <strong>Import:</strong> Upload a previously exported JSON file to restore content</li>
                     <li>• <strong>Reset:</strong> Restore all content to original default values</li>
                     <li>• All changes are applied immediately to the live website</li>
                   </ul>
