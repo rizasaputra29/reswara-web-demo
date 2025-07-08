@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,33 +13,20 @@ import AnimatedSection from '@/components/AnimatedSection';
 import AnimatedCard from '@/components/AnimatedCard';
 
 const ServicesPage = () => {
-  const [filter, setFilter] = useState<'all' | 'landscape' | 'building' | 'perizinan' | 'pengujian' | 'studi' | 'penyelidikan-tanah'>('all');
-
-  const filteredServices = services.filter(service => 
-    filter === 'all' || service.category === filter
-  );
-
-  const categories = [
-    { key: 'all', label: 'All Services', count: services.length },
-    { key: 'landscape', label: '🌿 Landscape', count: services.filter(s => s.category === 'landscape').length },
-    { key: 'building', label: '🏗️ Building', count: services.filter(s => s.category === 'building').length },
-    { key: 'perizinan', label: '📋 Perizinan', count: services.filter(s => s.category === 'perizinan').length },
-    { key: 'pengujian', label: '🔬 Pengujian', count: services.filter(s => s.category === 'pengujian').length },
-    { key: 'studi', label: '📊 Studi', count: services.filter(s => s.category === 'studi').length },
-    { key: 'penyelidikan-tanah', label: '🏔️ Penyelidikan Tanah', count: services.filter(s => s.category === 'penyelidikan-tanah').length }
-  ];
+  const landscapeServices = services.filter(service => service.category === 'landscape');
+  const buildingServices = services.filter(service => service.category === 'building');
 
   return (
     <div className="w-full overflow-hidden">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-red-50 via-white to-red-50 section-padding">
+      <section className="relative bg-gradient-to-br from-gray-50 via-white to-red-50 section-padding">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
             backgroundImage: 'radial-gradient(circle at 25% 25%, rgba(220, 38, 38, 0.3) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.3) 0%, transparent 50%)',
           }} />
         </div>
         
-        <div className="relative container-responsive">
+        <div className="relative container mx-auto container-padding">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -63,7 +50,7 @@ const ServicesPage = () => {
 
       {/* Services Overview */}
       <section className="section-padding bg-white">
-        <div className="container-responsive">
+        <div className="container mx-auto container-padding">
           <AnimatedSection className="text-center mb-16">
             <h2 className="heading-lg mb-4">
               What We Offer
@@ -91,12 +78,12 @@ const ServicesPage = () => {
             </AnimatedCard>
             
             <AnimatedCard index={1}>
-              <Card className="border-red-200 bg-red-50/50 h-full card-hover">
+              <Card className="border-blue-200 bg-blue-50/50 h-full card-hover">
                 <CardHeader className="text-center">
-                  <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <div className="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <span className="text-3xl">🏗️</span>
                   </div>
-                  <CardTitle className="text-2xl font-bold text-red-800">Building Consulting</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-blue-800">Building Consulting</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <CardDescription className="text-gray-700 text-center text-lg">
@@ -109,65 +96,53 @@ const ServicesPage = () => {
         </div>
       </section>
 
-      {/* Filter Section */}
-      <section className="section-padding bg-red-50">
-        <div className="container-responsive">
+      {/* Landscape Services */}
+      <section className="section-padding bg-green-50">
+        <div className="container mx-auto container-padding">
           <AnimatedSection className="text-center mb-16">
             <h2 className="heading-lg mb-4">
-              Browse Our Services
+              Landscape Development Services
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-              Filter by category to find the specific services you need
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Menciptakan ruang luar yang indah dan berkelanjutan
             </p>
-            
-            {/* Filter Buttons */}
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
-              {categories.map((category) => (
-                <Button
-                  key={category.key}
-                  variant={filter === category.key ? 'default' : 'outline'}
-                  onClick={() => setFilter(category.key as any)}
-                  className={`${
-                    filter === category.key 
-                      ? 'bg-red-600 hover:bg-red-700 text-white' 
-                      : 'border-red-500 text-red-700 hover:bg-red-50'
-                  } transition-all duration-300`}
-                >
-                  {category.label} ({category.count})
-                </Button>
-              ))}
-            </div>
           </AnimatedSection>
           
-          {/* Services Grid */}
-          <motion.div 
-            className="grid grid-auto-fit gap-8"
-            layout
-            key={filter}
-          >
-            {filteredServices.map((service, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {landscapeServices.map((service, index) => (
               <AnimatedCard key={service.id} index={index}>
                 <ServiceCard service={service} />
               </AnimatedCard>
             ))}
-          </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Building Services */}
+      <section className="section-padding bg-white">
+        <div className="container mx-auto container-padding">
+          <AnimatedSection className="text-center mb-16">
+            <h2 className="heading-lg mb-4">
+              Building Consulting Services
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Solusi lengkap untuk perencanaan dan perizinan bangunan
+            </p>
+          </AnimatedSection>
           
-          {filteredServices.length === 0 && (
-            <motion.div 
-              className="text-center py-12"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <p className="text-gray-500 text-lg">No services found for the selected category.</p>
-            </motion.div>
-          )}
+          <div className="grid grid-auto-fit gap-8">
+            {buildingServices.map((service, index) => (
+              <AnimatedCard key={service.id} index={index}>
+                <ServiceCard service={service} />
+              </AnimatedCard>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="section-padding bg-white">
-        <div className="container-responsive">
+      <section className="section-padding bg-gray-50">
+        <div className="container mx-auto container-padding">
           <AnimatedSection className="text-center mb-16">
             <h2 className="heading-lg mb-4">
               Benefits of Our Services
@@ -224,7 +199,7 @@ const ServicesPage = () => {
           backgroundImage: 'radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.3) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 50%)',
         }} />
         
-        <div className="container-responsive text-center relative">
+        <div className="container mx-auto container-padding text-center relative">
           <AnimatedSection>
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
               Ready to Start Your Project?

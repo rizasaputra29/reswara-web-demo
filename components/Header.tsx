@@ -48,7 +48,7 @@ const Header = () => {
               </div>
               <div>
                 <span className="text-xl font-bold text-gray-900">
-                  {companySettings?.name ?? 'CV Reswara Praptama'}
+                  {companySettings?.name || 'CV Reswara Praptama'}
                 </span>
                 <div className="text-xs text-gray-500 font-medium">Landscape & Building</div>
               </div>

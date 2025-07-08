@@ -48,10 +48,9 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ item }) => {
       perizinan: '📋 Perizinan',
       pengujian: '🔬 Pengujian',
       studi: '📊 Studi',
-      'penyelidikan-tanah': '🏔️ Penyelidikan Tanah',
-      default: '🏗️ Building'
+      'penyelidikan-tanah': '🏔️ Penyelidikan Tanah'
     };
-    return categoryMap[category] || categoryMap.default;
+    return categoryMap[category] || '🏗️ Building';
   };
 
   return (

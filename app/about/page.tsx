@@ -87,7 +87,7 @@ const AboutPage = () => {
               </h2>
               <div className="space-y-6 text-body">
                 <p>
-                  {companySettings?.description ?? ''} Dengan pengalaman lebih dari satu dekade, kami telah membantu berbagai klien menciptakan ruang yang tidak hanya indah secara estetika, tetapi juga fungsional dan berkelanjutan.
+                  {companySettings.description} Dengan pengalaman lebih dari satu dekade, kami telah membantu berbagai klien menciptakan ruang yang tidak hanya indah secara estetika, tetapi juga fungsional dan berkelanjutan.
                 </p>
                 <p>
                   Kami menyediakan layanan komprehensif mulai dari desain lanskap, pengembangan taman, konsultasi lingkungan, hingga perencanaan dan perizinan bangunan. Tim ahli kami terdiri dari arsitek, insinyur, dan konsultan berpengalaman yang berdedikasi untuk memberikan solusi terbaik.

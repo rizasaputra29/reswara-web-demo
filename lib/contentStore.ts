@@ -39,10 +39,18 @@ class ContentStore {
   private listeners: Set<() => void> = new Set();
 
   constructor() {
-    // Constructor now only initializes the store without API calls
+    // Initialize with API data
+    this.loadFromAPI();
+    
+    // Poll for changes every 3 seconds
+    if (typeof window !== 'undefined') {
+      setInterval(() => {
+        this.loadFromAPI();
+      }, 3000);
+    }
   }
 
-  async loadFromAPI() {
+  private async loadFromAPI() {
     try {
       // Load hero content
       const heroResponse = await fetch('/api/hero');
@@ -210,19 +218,7 @@ export function useContentStore() {
     const unsubscribe = contentStore.subscribe(() => {
       setUpdateTrigger(prev => prev + 1);
     });
-    
-    // Initialize with API data on client side only
-    contentStore.loadFromAPI();
-    
-    // Poll for changes every 3 seconds
-    const interval = setInterval(() => {
-      contentStore.loadFromAPI();
-    }, 3000);
-    
-    return () => {
-      unsubscribe();
-      clearInterval(interval);
-    };
+    return unsubscribe;
   }, []);
 
   return {

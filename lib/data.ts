@@ -31,61 +31,7 @@ export interface PortfolioItem {
 }
 
 export const services: Service[] = [
-  // Landscape Services
-  {
-    id: 'landscape-design',
-    title: 'Landscape Design',
-    description: 'Desain lanskap yang menggabungkan estetika dan fungsionalitas untuk menciptakan ruang luar yang indah dan berkelanjutan.',
-    icon: 'Trees',
-    category: 'landscape',
-    details: [
-      'Konsep desain lanskap',
-      'Pemilihan tanaman yang tepat',
-      'Desain hardscape dan softscape',
-      'Sistem irigasi dan drainase'
-    ]
-  },
-  {
-    id: 'garden-development',
-    title: 'Garden Development',
-    description: 'Pengembangan taman dengan pendekatan holistik yang mempertimbangkan aspek ekologi dan estetika.',
-    icon: 'Flower',
-    category: 'landscape',
-    details: [
-      'Perencanaan taman tematik',
-      'Instalasi sistem irigasi',
-      'Pemilihan dan penanaman vegetasi',
-      'Maintenance dan perawatan'
-    ]
-  },
-  {
-    id: 'green-space',
-    title: 'Green Space Development',
-    description: 'Pengembangan ruang hijau untuk meningkatkan kualitas lingkungan dan kesejahteraan masyarakat.',
-    icon: 'TreePine',
-    category: 'landscape',
-    details: [
-      'Perencanaan ruang terbuka hijau',
-      'Desain taman kota',
-      'Konservasi area hijau',
-      'Urban forestry planning'
-    ]
-  },
-  {
-    id: 'environmental-consulting',
-    title: 'Environmental Consulting',
-    description: 'Konsultasi lingkungan untuk memastikan proyek berjalan sesuai dengan standar kelestarian lingkungan.',
-    icon: 'Leaf',
-    category: 'landscape',
-    details: [
-      'Environmental impact assessment',
-      'Sustainable design solutions',
-      'Green building consultation',
-      'Ecological restoration planning'
-    ]
-  },
-
-  // Building Services
+  // Perencanaan dan Desain
   {
     id: 'desain-arsitektur',
     title: 'Desain Arsitektur',
@@ -369,66 +315,6 @@ export const portfolioItems: PortfolioItem[] = [
     year: '2021',
     client: 'RS. Sehat Sentosa',
     location: 'Jakarta Timur'
-  },
-  {
-    id: 'urban-park',
-    title: 'Urban Park Development',
-    description: 'Pengembangan taman kota dengan konsep sustainable landscape dan fasilitas rekreasi modern.',
-    image: 'https://images.pexels.com/photos/1105766/pexels-photo-1105766.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'landscape',
-    year: '2023',
-    client: 'Pemda Kota Jakarta',
-    location: 'Jakarta Pusat'
-  },
-  {
-    id: 'residential-complex',
-    title: 'Residential Complex Design',
-    description: 'Desain arsitektur kompleks hunian dengan pendekatan modern minimalis dan ramah lingkungan.',
-    image: 'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'building',
-    year: '2022',
-    client: 'PT. Properti Sejahtera',
-    location: 'Tangerang Selatan'
-  },
-  {
-    id: 'factory-permit',
-    title: 'Factory Environmental Permit',
-    description: 'Pengurusan izin lingkungan untuk pabrik manufaktur dengan sistem pengelolaan limbah terintegrasi.',
-    image: 'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'perizinan',
-    year: '2022',
-    client: 'PT. Manufaktur Indonesia',
-    location: 'Karawang'
-  },
-  {
-    id: 'water-quality-testing',
-    title: 'Water Quality Testing Project',
-    description: 'Pengujian kualitas air dan sistem pengolahan limbah untuk industri tekstil.',
-    image: 'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'pengujian',
-    year: '2023',
-    client: 'PT. Tekstil Nusantara',
-    location: 'Bandung'
-  },
-  {
-    id: 'highway-feasibility',
-    title: 'Highway Development Study',
-    description: 'Studi kelayakan pembangunan jalan tol dengan analisis dampak lingkungan dan sosial.',
-    image: 'https://images.pexels.com/photos/1105766/pexels-photo-1105766.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'studi',
-    year: '2021',
-    client: 'Kementerian PUPR',
-    location: 'Jawa Barat'
-  },
-  {
-    id: 'foundation-investigation',
-    title: 'Foundation Soil Investigation',
-    description: 'Penyelidikan tanah untuk pondasi gedung bertingkat tinggi dengan metode boring dan SPT.',
-    image: 'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=800',
-    category: 'penyelidikan-tanah',
-    year: '2023',
-    client: 'PT. Konstruksi Prima',
-    location: 'Jakarta Selatan'
   }
 ];
 
