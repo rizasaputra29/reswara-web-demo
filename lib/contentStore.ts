@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 
-// Content Store for managing dynamic content
+// Content Store for managing dynamic content with API integration
 export interface HeroContent {
+  id?: string;
   title: string;
   description: string;
   image: string;
@@ -16,9 +17,11 @@ export interface TeamMember {
   image: string;
   bio: string;
   expertise: string[];
+  order?: number;
 }
 
 export interface CompanySettings {
+  id?: string;
   name: string;
   tagline: string;
   description: string;
@@ -28,96 +31,82 @@ export interface CompanySettings {
   whatsapp: string;
 }
 
-// Content Store Class with Real-time Updates
+// Content Store Class with API Integration
 class ContentStore {
-  private heroContent: HeroContent;
-  private teamMembers: TeamMember[];
-  private companySettings: CompanySettings;
+  private heroContent: HeroContent | null = null;
+  private teamMembers: TeamMember[] = [];
+  private companySettings: CompanySettings | null = null;
   private listeners: Set<() => void> = new Set();
 
   constructor() {
-    // Initialize with default content
-    this.heroContent = this.loadHeroContent();
-    this.teamMembers = this.loadTeamMembers();
-    this.companySettings = this.loadCompanySettings();
-
-    // Listen for storage changes from other tabs/windows
+    // Initialize with API data
+    this.loadFromAPI();
+    
+    // Poll for changes every 3 seconds
     if (typeof window !== 'undefined') {
-      window.addEventListener('storage', this.handleStorageChange.bind(this));
-      
-      // Poll for changes every 2 seconds to sync with admin changes
       setInterval(() => {
-        this.syncWithStorage();
-      }, 2000);
+        this.loadFromAPI();
+      }, 3000);
     }
   }
 
-  private handleStorageChange(e: StorageEvent) {
-    if (e.key === 'heroContent' || e.key === 'teamMembers' || e.key === 'companySettings') {
-      this.syncWithStorage();
-    }
-  }
+  private async loadFromAPI() {
+    try {
+      // Load hero content
+      const heroResponse = await fetch('/api/hero');
+      if (heroResponse.ok) {
+        const newHeroContent = await heroResponse.json();
+        if (JSON.stringify(this.heroContent) !== JSON.stringify(newHeroContent)) {
+          this.heroContent = newHeroContent;
+          this.notifyListeners();
+        }
+      }
 
-  private syncWithStorage() {
-    const newHeroContent = this.loadHeroContent();
-    const newTeamMembers = this.loadTeamMembers();
-    const newCompanySettings = this.loadCompanySettings();
+      // Load team members
+      const teamResponse = await fetch('/api/team');
+      if (teamResponse.ok) {
+        const newTeamMembers = await teamResponse.json();
+        if (JSON.stringify(this.teamMembers) !== JSON.stringify(newTeamMembers)) {
+          this.teamMembers = newTeamMembers;
+          this.notifyListeners();
+        }
+      }
 
-    let hasChanges = false;
-
-    if (JSON.stringify(this.heroContent) !== JSON.stringify(newHeroContent)) {
-      this.heroContent = newHeroContent;
-      hasChanges = true;
-    }
-
-    if (JSON.stringify(this.teamMembers) !== JSON.stringify(newTeamMembers)) {
-      this.teamMembers = newTeamMembers;
-      hasChanges = true;
-    }
-
-    if (JSON.stringify(this.companySettings) !== JSON.stringify(newCompanySettings)) {
-      this.companySettings = newCompanySettings;
-      hasChanges = true;
-    }
-
-    if (hasChanges) {
-      this.notifyListeners();
+      // Load company settings
+      const companyResponse = await fetch('/api/company');
+      if (companyResponse.ok) {
+        const newCompanySettings = await companyResponse.json();
+        if (JSON.stringify(this.companySettings) !== JSON.stringify(newCompanySettings)) {
+          this.companySettings = newCompanySettings;
+          this.notifyListeners();
+        }
+      }
+    } catch (error) {
+      console.error('Error loading content from API:', error);
     }
   }
 
   // Hero Content Management
-  getHeroContent(): HeroContent {
+  getHeroContent(): HeroContent | null {
     return this.heroContent;
   }
 
-  updateHeroContent(content: Partial<HeroContent>): void {
-    this.heroContent = { ...this.heroContent, ...content };
-    this.saveHeroContent();
-    this.notifyListeners();
-    this.broadcastChange('heroContent');
-  }
-
-  private loadHeroContent(): HeroContent {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('heroContent');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error('Error parsing hero content:', e);
-        }
+  async updateHeroContent(content: Partial<HeroContent>): Promise<void> {
+    try {
+      const response = await fetch('/api/hero', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(content)
+      });
+      
+      if (response.ok) {
+        const updatedContent = await response.json();
+        this.heroContent = updatedContent;
+        this.notifyListeners();
       }
-    }
-    return {
-      title: 'Transform Your Space with Professional Excellence',
-      description: 'Leading landscape development and building consulting services. Creating sustainable, beautiful, and functional environments for over 15 years.',
-      image: 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800'
-    };
-  }
-
-  private saveHeroContent(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('heroContent', JSON.stringify(this.heroContent));
+    } catch (error) {
+      console.error('Error updating hero content:', error);
+      throw error;
     }
   }
 
@@ -126,135 +115,76 @@ class ContentStore {
     return this.teamMembers;
   }
 
-  addTeamMember(member: Omit<TeamMember, 'id'>): void {
-    const newMember = {
-      ...member,
-      id: Date.now().toString()
-    };
-    this.teamMembers = [...this.teamMembers, newMember];
-    this.saveTeamMembers();
-    this.notifyListeners();
-    this.broadcastChange('teamMembers');
-  }
-
-  updateTeamMember(id: string, updates: Partial<TeamMember>): void {
-    this.teamMembers = this.teamMembers.map(member =>
-      member.id === id ? { ...member, ...updates } : member
-    );
-    this.saveTeamMembers();
-    this.notifyListeners();
-    this.broadcastChange('teamMembers');
-  }
-
-  deleteTeamMember(id: string): void {
-    this.teamMembers = this.teamMembers.filter(member => member.id !== id);
-    this.saveTeamMembers();
-    this.notifyListeners();
-    this.broadcastChange('teamMembers');
-  }
-
-  private loadTeamMembers(): TeamMember[] {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('teamMembers');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error('Error parsing team members:', e);
-        }
+  async addTeamMember(member: Omit<TeamMember, 'id'>): Promise<void> {
+    try {
+      const response = await fetch('/api/team', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(member)
+      });
+      
+      if (response.ok) {
+        await this.loadFromAPI();
       }
+    } catch (error) {
+      console.error('Error adding team member:', error);
+      throw error;
     }
-    return [
-      {
-        id: 'director',
-        name: 'Ir. Ahmad Reswara',
-        position: 'Director & Lead Architect',
-        image: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400',
-        bio: 'Dengan pengalaman lebih dari 15 tahun dalam industri arsitektur dan lanskap, memimpin tim dalam menciptakan solusi desain yang inovatif dan berkelanjutan.',
-        expertise: ['Arsitektur', 'Desain Lanskap', 'Manajemen Proyek', 'Sustainable Design']
-      },
-      {
-        id: 'landscape-lead',
-        name: 'Dr. Sari Praptama',
-        position: 'Lead Landscape Designer',
-        image: 'https://images.pexels.com/photos/3760514/pexels-photo-3760514.jpeg?auto=compress&cs=tinysrgb&w=400',
-        bio: 'Spesialis dalam desain lanskap berkelanjutan dengan fokus pada konservasi lingkungan dan estetika yang harmonis.',
-        expertise: ['Landscape Design', 'Environmental Conservation', 'Botanical Planning', 'Sustainable Landscaping']
-      },
-      {
-        id: 'structural-engineer',
-        name: 'Ir. Budi Santoso',
-        position: 'Structural Engineer',
-        image: 'https://images.pexels.com/photos/2182969/pexels-photo-2182969.jpeg?auto=compress&cs=tinysrgb&w=400',
-        bio: 'Ahli struktur bangunan dengan pengalaman dalam berbagai proyek konstruksi skala besar dan kompleks.',
-        expertise: ['Structural Engineering', 'Building Analysis', 'Construction Planning', 'Safety Assessment']
-      },
-      {
-        id: 'environmental-consultant',
-        name: 'Dr. Maya Kusuma',
-        position: 'Environmental Consultant',
-        image: 'https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=400',
-        bio: 'Konsultan lingkungan berpengalaman dalam menangani berbagai aspek perizinan dan dampak lingkungan.',
-        expertise: ['Environmental Impact Assessment', 'Permit Management', 'Sustainability Planning', 'Regulatory Compliance']
-      }
-    ];
   }
 
-  private saveTeamMembers(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('teamMembers', JSON.stringify(this.teamMembers));
+  async updateTeamMember(id: string, updates: Partial<TeamMember>): Promise<void> {
+    try {
+      const response = await fetch(`/api/team/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+      
+      if (response.ok) {
+        await this.loadFromAPI();
+      }
+    } catch (error) {
+      console.error('Error updating team member:', error);
+      throw error;
+    }
+  }
+
+  async deleteTeamMember(id: string): Promise<void> {
+    try {
+      const response = await fetch(`/api/team/${id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        await this.loadFromAPI();
+      }
+    } catch (error) {
+      console.error('Error deleting team member:', error);
+      throw error;
     }
   }
 
   // Company Settings Management
-  getCompanySettings(): CompanySettings {
+  getCompanySettings(): CompanySettings | null {
     return this.companySettings;
   }
 
-  updateCompanySettings(settings: Partial<CompanySettings>): void {
-    this.companySettings = { ...this.companySettings, ...settings };
-    this.saveCompanySettings();
-    this.notifyListeners();
-    this.broadcastChange('companySettings');
-  }
-
-  private loadCompanySettings(): CompanySettings {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('companySettings');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error('Error parsing company settings:', e);
-        }
+  async updateCompanySettings(settings: Partial<CompanySettings>): Promise<void> {
+    try {
+      const response = await fetch('/api/company', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
+      });
+      
+      if (response.ok) {
+        const updatedSettings = await response.json();
+        this.companySettings = updatedSettings;
+        this.notifyListeners();
       }
-    }
-    return {
-      name: 'CV Reswara Praptama',
-      tagline: 'Transforming Spaces, Creating Sustainable Futures',
-      description: 'Perusahaan konsultan terkemuka yang mengkhususkan diri dalam pengembangan lingkungan dan bangunan lanskap.',
-      phone: '+62 21 1234 5678',
-      email: 'info@reswarapraptama.com',
-      address: 'Jl. Sudirman No. 123, Jakarta Pusat 10110',
-      whatsapp: '+62 812 3456 7890'
-    };
-  }
-
-  private saveCompanySettings(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('companySettings', JSON.stringify(this.companySettings));
-    }
-  }
-
-  // Real-time Broadcasting
-  private broadcastChange(type: string): void {
-    if (typeof window !== 'undefined') {
-      // Trigger storage event for other tabs
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: type,
-        newValue: JSON.stringify(this[type as keyof this]),
-        storageArea: localStorage
-      }));
+    } catch (error) {
+      console.error('Error updating company settings:', error);
+      throw error;
     }
   }
 
@@ -274,49 +204,6 @@ class ContentStore {
         console.error('Error in content store listener:', error);
       }
     });
-  }
-
-  // Bulk Operations
-  exportContent(): string {
-    return JSON.stringify({
-      heroContent: this.heroContent,
-      teamMembers: this.teamMembers,
-      companySettings: this.companySettings,
-      exportDate: new Date().toISOString()
-    }, null, 2);
-  }
-
-  importContent(jsonContent: string): void {
-    try {
-      const data = JSON.parse(jsonContent);
-      if (data.heroContent) {
-        this.heroContent = data.heroContent;
-        this.saveHeroContent();
-      }
-      if (data.teamMembers) {
-        this.teamMembers = data.teamMembers;
-        this.saveTeamMembers();
-      }
-      if (data.companySettings) {
-        this.companySettings = data.companySettings;
-        this.saveCompanySettings();
-      }
-      this.notifyListeners();
-    } catch (error) {
-      throw new Error('Invalid content format');
-    }
-  }
-
-  resetToDefaults(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('heroContent');
-      localStorage.removeItem('teamMembers');
-      localStorage.removeItem('companySettings');
-    }
-    this.heroContent = this.loadHeroContent();
-    this.teamMembers = this.loadTeamMembers();
-    this.companySettings = this.loadCompanySettings();
-    this.notifyListeners();
   }
 }
 
@@ -342,9 +229,6 @@ export function useContentStore() {
     addTeamMember: (member: Omit<TeamMember, 'id'>) => contentStore.addTeamMember(member),
     updateTeamMember: (id: string, updates: Partial<TeamMember>) => contentStore.updateTeamMember(id, updates),
     deleteTeamMember: (id: string) => contentStore.deleteTeamMember(id),
-    updateCompanySettings: (settings: Partial<CompanySettings>) => contentStore.updateCompanySettings(settings),
-    exportContent: () => contentStore.exportContent(),
-    importContent: (content: string) => contentStore.importContent(content),
-    resetToDefaults: () => contentStore.resetToDefaults()
+    updateCompanySettings: (settings: Partial<CompanySettings>) => contentStore.updateCompanySettings(settings)
   };
 }

@@ -24,19 +24,19 @@
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 220 70% 50%;
+    --primary: 0 84% 60%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
-    --accent: 220 70% 50%;
+    --accent: 0 84% 60%;
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 220 70% 50%;
+    --ring: 0 84% 60%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -51,20 +51,20 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 220 70% 50%;
+    --primary: 0 84% 60%;
     --primary-foreground: 0 0% 9%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 220 70% 50%;
+    --accent: 0 84% 60%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
-    --ring: 220 70% 50%;
-    --chart-1: 220 70% 50%;
+    --ring: 0 84% 60%;
+    --chart-1: 0 84% 60%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
@@ -82,14 +82,14 @@
   }
 }
 
-/* Custom Reswara Praptama Brand Colors */
+/* Custom Reswara Praptama Brand Colors - White & Red Theme */
 :root {
-  --brand-primary: #1e40af; /* Blue 700 */
-  --brand-secondary: #dc2626; /* Red 600 */
-  --brand-accent: #059669; /* Emerald 600 */
+  --brand-primary: #dc2626; /* Red 600 */
+  --brand-secondary: #ffffff; /* White */
+  --brand-accent: #059669; /* Emerald 600 - accent */
   --brand-neutral: #6b7280; /* Gray 500 */
-  --brand-light: #f8fafc; /* Slate 50 */
-  --brand-dark: #0f172a; /* Slate 900 */
+  --brand-light: #fef2f2; /* Red 50 */
+  --brand-dark: #7f1d1d; /* Red 900 */
 }
 
 /* Section Spacing */
@@ -103,28 +103,28 @@
 
 /* Typography */
 .heading-xl {
-  @apply text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 leading-tight;
+  @apply text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight;
 }
 
 .heading-lg {
-  @apply text-3xl lg:text-4xl font-bold text-slate-900 leading-tight;
+  @apply text-3xl lg:text-4xl font-bold text-gray-900 leading-tight;
 }
 
 .heading-md {
-  @apply text-2xl lg:text-3xl font-bold text-slate-900 leading-tight;
+  @apply text-2xl lg:text-3xl font-bold text-gray-900 leading-tight;
 }
 
 .text-body {
-  @apply text-slate-600 leading-relaxed;
+  @apply text-gray-600 leading-relaxed;
 }
 
-/* Button Styles */
+/* Button Styles - White & Red Theme */
 .btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105;
+  @apply bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105;
 }
 
 .btn-secondary {
-  @apply bg-white hover:bg-slate-50 text-blue-600 border-2 border-blue-600 px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105;
+  @apply bg-white hover:bg-red-50 text-red-600 border-2 border-red-600 px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105;
 }
 
 .btn-accent {
@@ -137,16 +137,16 @@
 }
 
 .card-primary {
-  @apply bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300;
+  @apply bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300;
 }
 
-/* Service Category Colors */
+/* Service Category Colors - Red Theme */
 .service-landscape {
   @apply bg-emerald-50 border-emerald-200 text-emerald-800;
 }
 
 .service-building {
-  @apply bg-blue-50 border-blue-200 text-blue-800;
+  @apply bg-red-50 border-red-200 text-red-800;
 }
 
 .service-perizinan {
@@ -241,16 +241,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #fef2f2;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e40af;
+  background: #dc2626;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1d4ed8;
+  background: #b91c1c;
 }
 
 /* Responsive Design Helpers */
@@ -258,23 +258,23 @@
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
 
-/* Brand Gradient */
+/* Brand Gradient - Red Theme */
 .gradient-brand {
-  background: linear-gradient(135deg, #1e40af 0%, #059669 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
 }
 
 .gradient-brand-light {
-  background: linear-gradient(135deg, #dbeafe 0%, #d1fae5 100%);
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
 }
 
 /* Focus States */
 .focus-brand {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  @apply focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
 }
 
 /* Status Colors */
 .status-new {
-  @apply bg-blue-100 text-blue-800 border-blue-200;
+  @apply bg-red-100 text-red-800 border-red-200;
 }
 
 .status-contacted {
@@ -295,9 +295,9 @@
 }
 
 .priority-medium {
-  @apply bg-blue-100 text-blue-800 border-blue-200;
+  @apply bg-red-100 text-red-800 border-red-200;
 }
 
 .priority-high {
-  @apply bg-red-100 text-red-800 border-red-200;
+  @apply bg-red-200 text-red-900 border-red-300;
 }
