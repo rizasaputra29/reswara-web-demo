@@ -42,7 +42,7 @@ class ContentStore {
     // Constructor now only initializes the store without API calls
   }
 
-  private async loadFromAPI() {
+  async loadFromAPI() {
     try {
       // Load hero content
       const heroResponse = await fetch('/api/hero');

@@ -80,7 +80,7 @@ const HomePage = () => {
 
               <AnimatedSection delay={0.2}>
                 <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
-                  {heroContent?.description || 'Leading landscape development and building consulting services. Creating sustainable, beautiful, and functional environments for over 15 years.'}
+                  {heroContent?.description ?? 'Leading landscape development and building consulting services. Creating sustainable, beautiful, and functional environments for over 15 years.'}
                 </p>
               </AnimatedSection>
 
@@ -103,11 +103,11 @@ const HomePage = () => {
                 <div className="flex flex-wrap gap-6 pt-8 border-t border-gray-200">
                   <div className="flex items-center space-x-2">
                     <Phone className="h-5 w-5 text-red-600" />
-                    <span className="text-sm text-gray-600">{companySettings?.phone || '+62 21 1234 5678'}</span>
+                    <span className="text-sm text-gray-600">{companySettings?.phone ?? '+62 21 1234 5678'}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Mail className="h-5 w-5 text-red-600" />
-                    <span className="text-sm text-gray-600">{companySettings?.email || 'info@reswarapraptama.com'}</span>
+                    <span className="text-sm text-gray-600">{companySettings?.email ?? 'info@reswarapraptama.com'}</span>
                   </div>
                 </div>
               </AnimatedSection>
@@ -119,7 +119,7 @@ const HomePage = () => {
                 <div className="absolute -inset-4 bg-red-600 rounded-3xl opacity-20 blur-xl" />
                 <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden">
                   <img
-                    src={heroContent?.image || 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800'}
+                    src={heroContent?.image ?? 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800'}
                     alt="Beautiful landscape design"
                     className="w-full aspect-[4/3] object-cover rounded-3xl"
                     onError={(e) => {
