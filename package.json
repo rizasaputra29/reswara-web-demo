@@ -11,6 +11,12 @@
     "db:push": "prisma db push",
     "db:seed": "tsx scripts/seed.ts",
     "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset --force",
+    "db:deploy": "prisma migrate deploy"
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force"
   },
   "dependencies": {
